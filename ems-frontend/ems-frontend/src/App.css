@@ -1,0 +1,16 @@
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  text-align: center;
+  color: whitesmoke;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+
+.table-container {
+  background-color: black;
+  color: white;
+  border-radius: 15px;
+}
