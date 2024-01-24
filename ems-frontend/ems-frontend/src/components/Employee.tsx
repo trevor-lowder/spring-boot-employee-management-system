@@ -16,10 +16,8 @@ const Employee: React.FC = () => {
       lastName,
       email,
     };
-    console.log(employee);
-    createEmployee(employee).then((response) => {
-      console.log(response.data);
-      navigate("/employees");
+    createEmployee(employee).then((): void => {
+        navigate("/employees");
     });
   };
   return (
