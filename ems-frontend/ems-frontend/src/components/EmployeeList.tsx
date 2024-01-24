@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { employeeList, Employee } from "../services/EmployeeService";
-import "../App.css"
+import { useNavigate } from "react-router-dom";
+import "../App.css";
+import { PlusIcon } from "@primer/octicons-react";
 
 const EmployeeList: React.FC = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEmployeeList = async () => {
@@ -18,11 +21,29 @@ const EmployeeList: React.FC = () => {
     fetchEmployeeList();
   }, []);
 
+  const addEmployee = () => {
+    navigate("/add-employee");
+  };
+
   return (
     <div className="container d-flex flex-column mt-5 table-container table-hover">
-      <h2 className="text-center">Employee List</h2>
+      <div className="d-flex flex-row justify-content-between align-items-center">
+        <h2 style={{ marginLeft: "525px" }}>Employee List</h2>
+        <button
+          className="btn btn-primary btn-lg"
+          style={{
+            marginRight: "100px",
+            backgroundColor: "black",
+            border: "none",
+          }}
+          type="button"
+          onClick={addEmployee}
+        >
+          <PlusIcon size={32} />
+        </button>
+      </div>
       <table className="table table-striped table-bordered">
-        <thead >
+        <thead>
           <tr>
             <th className="text-center">ID</th>
             <th className="text-center">First Name</th>
