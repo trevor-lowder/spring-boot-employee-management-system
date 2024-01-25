@@ -13,6 +13,7 @@ function App() {
           <Routes>
             <Route path="employees" element={<EmployeeList />}></Route>
             <Route path="add-employee" element={<Employee/>}></Route>
+            <Route path='edit-employee/:id' element={<Employee/>}></Route>
           </Routes>
         </div>
         <Footer />

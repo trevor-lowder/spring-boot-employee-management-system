@@ -25,6 +25,10 @@ const EmployeeList: React.FC = () => {
     navigate("/add-employee");
   };
 
+  const editEmployee = (id: number | undefined) => {
+    navigate(`/edit-employee/${id}`);
+  };
+
   return (
     <div className="container d-flex flex-column mt-5 table-container table-hover">
       <div className="d-flex flex-row justify-content-between align-items-center">
@@ -49,6 +53,7 @@ const EmployeeList: React.FC = () => {
             <th className="text-center">First Name</th>
             <th className="text-center">Last Name</th>
             <th className="text-center">Email</th>
+            <th className="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -58,6 +63,14 @@ const EmployeeList: React.FC = () => {
               <td>{employee.firstName}</td>
               <td>{employee.lastName}</td>
               <td>{employee.email}</td>
+              <td className="d-flex justify-content-center">
+                <button
+                  className="btn btn-info"
+                  onClick={() => editEmployee(employee.id)}
+                >
+                  Edit
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

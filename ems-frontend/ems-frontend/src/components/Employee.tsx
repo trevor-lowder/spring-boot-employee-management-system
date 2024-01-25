@@ -1,25 +1,66 @@
 import React, { useState } from "react";
 import { createEmployee } from "../services/EmployeeService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+interface Employee {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
 
 const Employee: React.FC = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+  const { id } = useParams();
 
   const navigate = useNavigate();
 
   const saveEmployee = (e: { preventDefault: () => void }): void => {
     e.preventDefault();
-    const employee: { firstName: string; lastName: string; email: string } = {
+    const employee: Employee = {
       firstName,
       lastName,
       email,
     };
-    createEmployee(employee).then((): void => {
+    validateForm() &&
+      createEmployee(employee).then((): void => {
         navigate("/employees");
-    });
+      });
   };
+
+  const validateForm = () => {
+    let isValid = true;
+    const errorsCopy = { ...errors };
+    if (firstName.trim()) {
+      errorsCopy.firstName = "";
+    } else {
+      errorsCopy.firstName = "First name is required";
+      isValid = false;
+    }
+    if (lastName.trim()) {
+      errorsCopy.lastName = "";
+    } else {
+      errorsCopy.lastName = "Last name is required";
+      isValid = false;
+    }
+    if (email.trim()) {
+      errorsCopy.email = "";
+    } else {
+      errorsCopy.email = "Email is required";
+      isValid = false;
+    }
+
+    setErrors(errorsCopy);
+
+    return isValid;
+  };
+
   return (
     <div className="container ">
       <div className="row">
@@ -27,7 +68,12 @@ const Employee: React.FC = () => {
           className="card col-md-6 offset-md-3"
           style={{ marginTop: "8rem" }}
         >
-          <h2 className="text-center mt-4">Add Employee</h2>
+          {id ? (
+            <h2 className="text-center mt-4">Update Employee</h2>
+          ) : (
+            <h2 className="text-center mt-4">Add Employee</h2>
+          )}
+
           <div className="card-body">
             <form>
               <div className="form-group">
@@ -39,11 +85,16 @@ const Employee: React.FC = () => {
                   placeholder="Employee First Name"
                   name="firstname"
                   value={firstName}
-                  className="form-control"
+                  className={`form-control ${
+                    errors.firstName ? "is-invalid" : ""
+                  }`}
                   onChange={(e: { target: { value: string } }): void =>
                     setFirstName(e.target.value)
                   }
                 />
+                {errors.firstName && (
+                  <div className="invalid-feedback">{errors.firstName}</div>
+                )}
                 <label htmlFor="lastname" className="form-label mt-4">
                   Last Name:
                 </label>
@@ -52,11 +103,16 @@ const Employee: React.FC = () => {
                   placeholder="Employee Last Name"
                   name="lastname"
                   value={lastName}
-                  className="form-control"
+                  className={`form-control ${
+                    errors.lastName ? "is-invalid" : ""
+                  }`}
                   onChange={(e: { target: { value: string } }): void =>
                     setLastName(e.target.value)
                   }
                 />
+                {errors.lastName && (
+                  <div className="invalid-feedback">{errors.lastName}</div>
+                )}
                 <label htmlFor="email" className="form-label mt-4">
                   Email:
                 </label>
@@ -65,11 +121,14 @@ const Employee: React.FC = () => {
                   placeholder="Employee Email"
                   name="email"
                   value={email}
-                  className="form-control"
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   onChange={(e: { target: { value: string } }): void =>
                     setEmail(e.target.value)
                   }
                 />
+                {errors.email && (
+                  <div className="invalid-feedback">{errors.email}</div>
+                )}
               </div>
               <button
                 className="btn btn-success btn-lg mt-4 offset-lg-5"
