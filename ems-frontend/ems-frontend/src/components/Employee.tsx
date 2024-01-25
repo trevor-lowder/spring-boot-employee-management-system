@@ -37,6 +37,7 @@ const Employee: React.FC = () => {
   const validateForm = () => {
     let isValid = true;
     const errorsCopy = { ...errors };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (firstName.trim()) {
       errorsCopy.firstName = "";
     } else {
@@ -49,10 +50,10 @@ const Employee: React.FC = () => {
       errorsCopy.lastName = "Last name is required";
       isValid = false;
     }
-    if (email.trim()) {
+    if (email.trim() && emailRegex.test(email)) {
       errorsCopy.email = "";
     } else {
-      errorsCopy.email = "Email is required";
+      errorsCopy.email = "Valid email is required";
       isValid = false;
     }
 
