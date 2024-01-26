@@ -11,4 +11,8 @@ export interface Employee {
 
 export const employeeList = () => axios.get<Employee[]>(REST_API_BASE_URL);
 
-export const createEmployee = (employee: Employee) => axios.post<Employee>(REST_API_BASE_URL, employee);
+export const createEmployee = (employee: Employee) => axios.post(REST_API_BASE_URL, employee);
+
+export const getEmployee = (employeeId: number) => axios.get(`${REST_API_BASE_URL}/${employeeId}`);
+
+export const updateEmployee = (employeeId: number, employee: Employee) => axios.patch(`${REST_API_BASE_URL}/${employeeId}`, employee);

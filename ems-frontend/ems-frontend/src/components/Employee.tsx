@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import { createEmployee } from "../services/EmployeeService";
+import React, { useState, useEffect } from "react";
+import {
+  createEmployee,
+  getEmployee,
+  updateEmployee,
+} from "../services/EmployeeService";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface Employee {
@@ -21,17 +25,45 @@ const Employee: React.FC = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    id &&
+      getEmployee(Number(id))
+        .then(
+          (response: {
+            data: {
+              firstName: React.SetStateAction<string>;
+              lastName: React.SetStateAction<string>;
+              email: React.SetStateAction<string>;
+            };
+          }) => {
+            setFirstName(response.data.firstName);
+            setLastName(response.data.lastName);
+            setEmail(response.data.email);
+          }
+        )
+        .catch((error) => console.error(error));
+  }, [id]);
+
   const saveEmployee = (e: { preventDefault: () => void }): void => {
     e.preventDefault();
+
     const employee: Employee = {
       firstName,
       lastName,
       email,
     };
     validateForm() &&
-      createEmployee(employee).then((): void => {
-        navigate("/employees");
-      });
+      (id
+        ? updateEmployee(Number(id), employee)
+            .then((): void => {
+              navigate("/employees");
+            })
+            .catch((error) => console.error(error))
+        : createEmployee(employee)
+            .then((): void => {
+              navigate("/employees");
+            })
+            .catch((error) => console.error(error)));
   };
 
   const validateForm = () => {
