@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { employeeList, Employee } from "../services/EmployeeService";
+import {
+  employeeList,
+  Employee,
+  deleteEmployee,
+} from "../services/EmployeeService";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
-import { PlusIcon } from "@primer/octicons-react";
+import { PlusIcon, PencilIcon, TrashIcon } from "@primer/octicons-react";
 
 const EmployeeList: React.FC = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchEmployeeList = async () => {
-      try {
-        const response = await employeeList();
-        setEmployees(response.data);
-      } catch (err) {
-        console.error("Error fetching Employee data", err);
-      }
-    };
-
     fetchEmployeeList();
   }, []);
+
+  const fetchEmployeeList = async () => {
+    try {
+      const response = await employeeList();
+      setEmployees(response.data);
+    } catch (err) {
+      console.error("Error fetching Employee data", err);
+    }
+  };
 
   const addEmployee = () => {
     navigate("/add-employee");
@@ -27,6 +31,12 @@ const EmployeeList: React.FC = () => {
 
   const editEmployee = (id: number | undefined) => {
     navigate(`/edit-employee/${id}`);
+  };
+
+  const removeEmployee = (id: number) => {
+    deleteEmployee(id)
+      .then(() => fetchEmployeeList())
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -57,7 +67,7 @@ const EmployeeList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {employees.map((employee) => (
+          {employees.map((employee: Employee) => (
             <tr key={employee.id}>
               <td>{employee.id}</td>
               <td>{employee.firstName}</td>
@@ -65,10 +75,16 @@ const EmployeeList: React.FC = () => {
               <td>{employee.email}</td>
               <td className="d-flex justify-content-center">
                 <button
-                  className="btn btn-info"
+                  className="btn btn-outline me-2"
                   onClick={() => editEmployee(employee.id)}
                 >
-                  Edit
+                  <PencilIcon size={24} />
+                </button>
+                <button
+                  className="btn btn-outline ms-2"
+                  onClick={() => removeEmployee(Number(employee.id))}
+                >
+                  <TrashIcon size={24} />
                 </button>
               </td>
             </tr>

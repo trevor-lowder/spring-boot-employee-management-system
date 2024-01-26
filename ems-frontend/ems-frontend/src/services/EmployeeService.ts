@@ -16,3 +16,5 @@ export const createEmployee = (employee: Employee) => axios.post(REST_API_BASE_U
 export const getEmployee = (employeeId: number) => axios.get(`${REST_API_BASE_URL}/${employeeId}`);
 
 export const updateEmployee = (employeeId: number, employee: Employee) => axios.patch(`${REST_API_BASE_URL}/${employeeId}`, employee);
+
+export const deleteEmployee = (employeeId: number) => axios.delete(`${REST_API_BASE_URL}/${employeeId}`)
